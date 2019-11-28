@@ -1,0 +1,18 @@
+# 日志
+*.log
+*.logger
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# 导包缓存
+__pycache__
+
+# 本地测试脚本
+scripts
