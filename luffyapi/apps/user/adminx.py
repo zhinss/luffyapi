@@ -12,4 +12,3 @@ class GlobalSettings(object):
 
 
 xadmin.site.register(views.CommAdminView, GlobalSettings)
-xadmin.site.register(models.Banner)

@@ -54,6 +54,7 @@ INSTALLED_APPS = [
 
     # 自定义app
     'user',
+    'home',
 
 ]
 
@@ -200,4 +201,10 @@ LOGGING = {
 # drf配置
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'utils.exception.exception_handler',
+    'DEFAULT_THROTTLE_RATES': {
+        'sms': '1/min',
+    }
 }
+
+# 验证码过期时间
+SMS_EXP = 300

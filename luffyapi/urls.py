@@ -31,6 +31,7 @@ urlpatterns = [
 
     # 路由分发
     path('user/', include('user.urls')),
+    path('home/', include('home.urls')),
 
     re_path(r'^media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT})
 ]

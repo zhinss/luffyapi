@@ -1,3 +1,4 @@
-from django.contrib import admin
+import xadmin
+from home.models import Banner
 
-# Register your models here.
+xadmin.site.register(Banner)
