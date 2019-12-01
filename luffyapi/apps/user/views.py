@@ -70,6 +70,43 @@ class SMSAPIView(APIView):
         return APIResponse(0, '发送验证码成功')
 
 
+# 手机号登陆
+class CodeLoginAPIView(APIView):
+    """手机号登陆"""
+    def post(self, request, *args, **kwargs):
+
+        # 获取前端传过来的手机号和验证码
+        phone = request.data.get('phone')
+        code = request.data.get('code')
+        print(code)
+        print(cache.get('sms_%s' % phone))
+        try:
+            user = models.MyUser.objects.get(phone=phone)
+        except:
+            return APIResponse(1, data_msg='phone error', results='手机号未注册', http_status=400)
+
+        if user and code == cache.get('sms_%s' % phone):
+
+            return APIResponse(results='登陆成功')
+        return APIResponse(1, data_msg='code error', results='验证码错误', http_status=400)
+
+
+# 手机注册
+class RegisterAPIView(APIView):
+    """手机注册"""
+    def post(self, request, *args, **kwargs):
+
+        # 获取前端传过来的手机号和验证码
+        phone = request.data.get('phone')
+        code = request.data.get('code')
+        password = request.data.get('password')
+
+        if code == cache.get('sms_%s' % phone):
+
+            return APIResponse(results='注册成功')
+
+        return APIResponse(results='验证码错误')
+
 
 
 
