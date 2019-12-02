@@ -9,7 +9,7 @@ sender = SmsSingleSender(settings.APP_ID, settings.APP_KEY)
 
 
 # 生成验证码
-def get_code(num=6):
+def get_code(num=settings.CODE_LENGTH):
     """生成验证码"""
     code = ''
     for i in range(num):

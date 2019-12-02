@@ -206,5 +206,6 @@ REST_FRAMEWORK = {
     }
 }
 
-# 验证码过期时间
-SMS_EXP = 300
+# 导入常量
+from settings.const import *
+

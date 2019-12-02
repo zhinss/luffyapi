@@ -62,10 +62,10 @@ class SMSAPIView(APIView):
         # 服务器缓存验证码
         if not result:
             return APIResponse(1, '发送验证码失败')
-        cache.set('sms_%s' % phone, code, settings.SMS_EXP)
+        cache.set(settings.SMS_CACHE_KEY % phone, code, settings.SMS_EXP)
 
         # 校验发送的验证码与缓存的验证码是否一致
-        print('>>>>> %s - %s <<<<<' % (code, cache.get('sms_%s' % phone)))
+        print('>>>>> %s - %s <<<<<' % (code, cache.get(settings.SMS_CACHE_KEY % phone)))
 
         return APIResponse(0, '发送验证码成功')
 
@@ -75,20 +75,14 @@ class CodeLoginAPIView(APIView):
     """手机号登陆"""
     def post(self, request, *args, **kwargs):
 
-        # 获取前端传过来的手机号和验证码
-        phone = request.data.get('phone')
-        code = request.data.get('code')
-        print(code)
-        print(cache.get('sms_%s' % phone))
-        try:
-            user = models.MyUser.objects.get(phone=phone)
-        except:
-            return APIResponse(1, data_msg='phone error', results='手机号未注册', http_status=400)
+        user_ser = serializers.PhoneLoginModelsSerializer(data=request.data)
 
-        if user and code == cache.get('sms_%s' % phone):
+        user_ser.is_valid(raise_exception=True)
 
-            return APIResponse(results='登陆成功')
-        return APIResponse(1, data_msg='code error', results='验证码错误', http_status=400)
+        return APIResponse(data={
+            'username': user_ser.user.username,
+            'token': user_ser.token
+        })
 
 
 # 手机注册
@@ -96,16 +90,16 @@ class RegisterAPIView(APIView):
     """手机注册"""
     def post(self, request, *args, **kwargs):
 
-        # 获取前端传过来的手机号和验证码
-        phone = request.data.get('phone')
-        code = request.data.get('code')
-        password = request.data.get('password')
+        user_ser = serializers.RegisterModelSerializer(data=request.data)
 
-        if code == cache.get('sms_%s' % phone):
+        user_ser.is_valid(raise_exception=True)
+        user = user_ser.save()
 
-            return APIResponse(results='注册成功')
-
-        return APIResponse(results='验证码错误')
+        return APIResponse(msg='注册成功', data={
+            'username': user.username,
+            'email': user.email,
+            'phone': user.phone,
+        })
 
 
 
